@@ -127,11 +127,9 @@ int main() {
 </section>
 <footer>
   <p>
+    Problem source:
     <a href="http://jag2013autumn.contest.atcoder.jp/tasks/icpc2013autumn_h">
-    JAG Practice Contest for ACM-ICPC Asia Regional 2013
-    H - Venn Diagram</a>,
-    NTUJ Practice 2016-08-20 H, and
-    NTUJ ACM2016 HW4 C.
+    JAG Practice Contest for ACM-ICPC Asia Regional 2013 H - Venn Diagram</a>
   </p>
 
   <p>

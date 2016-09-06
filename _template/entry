@@ -11,12 +11,12 @@
       window.onload = function () {
         var ss = document.createElement("link");
         ss.rel = "stylesheet";
-        ss.href = "/prism.css";
+        ss.href = "{{=it.site}}/prism.css";
         document.getElementsByTagName("head")[0].appendChild(ss);
       };
     </script>
     <noscript>
-      <link rel="stylesheet" href="/prism.css">
+      <link rel="stylesheet" href="{{=it.site}}/prism.css">
     </noscript>
 {{?it.mathjax}}    <script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>{{?}}
   </head>
@@ -25,7 +25,7 @@
       <h1>johnchen902's Blog</h1>
     </header>
     <nav>
-      <a href="/">Index</a>
+      <a href="{{=it.site}}/">Index</a>
     </nav>
     <article>
 {{=it.content}}

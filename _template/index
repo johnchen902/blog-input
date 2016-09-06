@@ -35,7 +35,7 @@
         var df=it.dateFormat;
         it.raws.sort((a,b)=>new Date(b.creation)-new Date(a.creation));
       }}{{~it.raws:value:index}}
-        <dt><a href="/{{!value.webpath}}">{{!value.title}}</a>
+        <dt><a href="{{=it.site}}/{{!value.webpath}}">{{!value.title}}</a>
         <dd>{{!value.description}}
           <br><i class="date"><time datetime="{{!df(value.creation,"isoDate")}}">{{!df(value.creation,"mmmm dd yyyy")}}</time></i>{{~}}
       </dl>

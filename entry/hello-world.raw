@@ -1,0 +1,44 @@
+# vim: ft=html
+Template: entry
+Title: Hello, world!
+Path: hello-world.html
+Author: johnchen902
+Description: Print 'Hello, world!'
+Creation: 2016-08-25 20:00:00
+
+<header><h2>Hello, world!</h2></header>
+<section>
+  <h3>Problem</h3>
+  <p>
+    As you expected, print <code class="language-cpp">"Hello, world!"</code>.
+  </p>
+</section>
+<section>
+  <h3>Solution</h3>
+  <p>
+    Just do it.
+  </p>
+  <p>
+    Because there is no formatted output,
+    <code class="language-cpp">std::puts()</code> will be used instead of
+    <code class="language-cpp">std::printf()</code>.
+  </p>
+</section>
+<section>
+  <h3>Source Code</h3>
+<pre><code class="language-cpp">#include &lt;cstdio&gt;
+int main() {
+    std::puts("Hello, world!");
+}
+</code></pre>
+</section>
+<footer>
+  <p>
+    A dummy article with a classical example that
+    can be found everywhere.
+  </p>
+  <p>
+    First written on <time datetime="2016-08-25">August 25 2016</time>.
+    Rewritten on <time datetime="2016-08-30">August 30 2016</time>.
+  </p>
+</footer>

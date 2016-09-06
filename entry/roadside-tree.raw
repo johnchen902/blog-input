@@ -1,0 +1,185 @@
+# vim: ft=html
+Template: entry
+Title: Roadside Trees (Specialized Dynamic LIS)
+Path: roadside-trees.html
+Author: johnchen902
+Description: Compute the longest increasing subsequence while inserting almost-smallest numbers or deleting almost-leftmost numbers.
+Creation: 2016-08-30 20:00:00
+
+<header><h2>Roadside Trees (Specialized Dynamic LIS)</h2></header>
+<section>
+  <header><h3>Problem</h3></header>
+  <p>
+    Compute the longest increasing subsequence while
+    inserting almost-smallest numbers and
+    deleting almost-leftmost numbers.
+  </p>
+</section>
+<section>
+  <header><h3>Detailed Problem</h3></header>
+  <p>
+    There are some positions from left to right.
+    Each position may hold a positive integer.
+    You have to handle two operations:
+  </p>
+  <ol>
+    <li>Put a number to a specified position.</li>
+    <li>Remove the x-th number from the left.</li>
+  </ol>
+  <p>
+    Additionally, each number increases by 1 before each operation,
+    and you have to print out the length of the longest increasing
+    subsequence (from left to right) after each operation.
+  </p>
+  <p>
+    Neither the number to add in the first operation nor
+    the x in the second operation is larger than 10.
+  </p>
+</section>
+<section>
+  <header><h3>Solution</h3></header>
+  <p>
+    Recall the static LIS algorithm:
+    Create a list that is initially empty.
+    For each number x,
+    replace the smallest number larger than x on the list with x.
+    If x is already larger than all numbers on the list,
+    append it to the list instead.
+  </p>
+  <p>
+    I tried to directly emulate the changes, but I failed.
+    Then suddenly I realized I can swap small and large
+    and swap left and right, and the changes can be emulated.
+  </p>
+  <p>
+    Change the list of numbers to a list of deques.
+    Instead of replacing numbers,
+    append the numbers to the corresponding deque.
+    The largest number is always at the front of some deque,
+    while the rightmost number is always at the back.
+    Moreover,
+    the positions of the fronts are monotonic,
+    and so do the numbers of the backs.
+    Therefore, it's easy to handle insertion and deletion of the largest
+    number or the rightmost number.
+  </p>
+  <p>
+    To handle an almost-largest number, temporarily remove
+    all larger numbers. To handle an almost-rightmost number,
+    temporarily remove all numbers to its right.
+    As only insertion of almost-largest numbers and deletion of
+    almost-rightmost numbers are needed, the problem is solved.
+  </p>
+</section>
+<section>
+  <header><h3>Source Code</h3></header>
+<pre><code class="language-cpp">#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+#include &lt;deque&gt;
+#include &lt;map&gt;
+#include &lt;stack&gt;
+using namespace std;
+
+vector&lt;deque&lt;pair&lt;int, int&gt;&gt;&gt; a;
+map&lt;int, int&gt; p2h, h2p;
+
+void insert(int p, int h) {
+    stack&lt;pair&lt;int, int&gt;&gt; temp;
+    for(auto ite = h2p.end(); ite != h2p.begin(); ) {
+        --ite;
+        if(ite-&gt;first &lt; h)
+            break;
+        temp.push(make_pair(ite-&gt;second, ite-&gt;first));
+        auto ite2 = partition_point(a.begin(), a.end(),
+                [ite](const deque&lt;pair&lt;int, int&gt;&gt; &amp;d) {
+                    return d.front().first &lt; ite-&gt;second;
+                });
+        ite2-&gt;pop_front();
+        if(ite2-&gt;empty())
+            a.pop_back();
+    }
+    p2h.insert(make_pair(p, h));
+    h2p.insert(make_pair(h, p));
+    temp.push(make_pair(p, h));
+    while(!temp.empty()) {
+        auto pa = temp.top();
+        temp.pop();
+        auto ite = partition_point(a.begin(), a.end(),
+                [pa](const deque&lt;pair&lt;int, int&gt;&gt; &amp;d) {
+                    return d.front().first &lt; pa.first;
+                });
+        if(ite == a.end())
+            a.emplace_back(1, pa);
+        else
+            ite-&gt;push_front(pa);
+    }
+}
+
+void remove(int x) {
+    stack&lt;pair&lt;int, int&gt;&gt; temp;
+    for(auto ite = p2h.end(); x--; ) {
+        --ite;
+        temp.push(*ite);
+        auto ite2 = partition_point(a.begin(), a.end(),
+                [ite](const deque&lt;pair&lt;int, int&gt;&gt; &amp;d) {
+                    return d.back().second &lt; ite-&gt;second;
+                });
+        ite2-&gt;pop_back();
+        if(ite2-&gt;empty())
+            a.pop_back();
+    }
+
+    p2h.erase(temp.top().first);
+    h2p.erase(temp.top().second);
+    temp.pop();
+
+    while(!temp.empty()) {
+        auto pa = temp.top();
+        temp.pop();
+        auto ite = partition_point(a.begin(), a.end(),
+                [pa](const deque&lt;pair&lt;int, int&gt;&gt; &amp;d) {
+                    return d.back().second &lt; pa.second;
+                });
+        if(ite == a.end())
+            a.emplace_back(1, pa);
+        else
+            ite-&gt;push_back(pa);
+    }
+}
+
+int getlis() {
+    return a.size();
+}
+
+int main() {
+    int q;
+    scanf("%*d %d", &amp;q);
+    for(int i = 0; i &lt; q; i++) {
+        int type;
+        scanf("%d", &amp;type);
+        if(type == 1) {
+            int p, h;
+            scanf("%d %d", &amp;p, &amp;h);
+            insert(-p, i - h);
+        } else if(type == 2) {
+            int x;
+            scanf("%d", &amp;x);
+            remove(x);
+        }
+        printf("%d\n", getlis());
+    }
+}
+</code></pre>
+</section>
+<footer>
+  <p>
+    <a href="http://codeforces.com/contest/264/problem/E">
+    Codeforces Round #162 (Div. 1) E - Roadside Trees</a> and
+    NTUJ ACM2016 HW4 I.
+  </p>
+
+  <p>
+    Written on <time datetime="2016-08-30">August 30 2016</time>.
+  </p>
+</footer>

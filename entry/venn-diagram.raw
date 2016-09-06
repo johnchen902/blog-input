@@ -1,0 +1,140 @@
+# vim: ft=html
+Template: entry
+Title: Venn Diagram (Fit Circles)
+Path: venn-diagram.html
+Author: johnchen902
+Description: Fit two circles into a specified rectangle. The areas of the circles and the area of their intersection are also specified.
+Creation: 2016-08-26
+
+<header><h2>Venn Diagram (Fit Circles)</h2></header>
+<section>
+  <header><h3>Problem</h3></header>
+  <p>
+    Fit two circles into a specified rectangle.
+    The areas of the circles and the area of their intersection
+    are also specified.
+  </p>
+</section>
+<section>
+  <header><h3>Solution</h3></header>
+  <p>
+    First, we need to find the distance between the circles
+    meeting the "intersection area" constrain.
+    It's too difficult for me to compute it directly,
+    so I used binary search.
+  </p>
+  <p>
+    Second, we need to fit the circles into the specified rectangle.
+    I only tried vertical and horizontal positions
+    at first and got a Wrong Answer,
+    as any angle may be a feasible position.
+    Fortunately it's not hard to fit them properly.
+  </p>
+  <svg width="160" height="160" viewBox="-5 -5 160 160">
+    <title>Fitting the Circles</title>
+    <desc>
+      The circle with larger radius is at lower-left corner while
+      the circle with smaller radius touches the right boundary.
+    </desc>
+    <rect width="150" height="150" stroke="black" fill="none"/>
+    <circle cx="45" cy="105" r="45" stroke="black" fill="none"/>
+    <circle cx="110" cy="50.2277" r="40" stroke="black" fill="none"/>
+    <line x1="0" y1="105" x2="110" y2="105" stroke="black"/>
+    <line x1="45" y1="105" x2="45" y2="150" stroke="black"/>
+    <line x1="45" y1="105" x2="45" y2="150" stroke="black"/>
+    <line x1="45" y1="105" x2="110" y2="50.2277" stroke="black"/>
+    <line x1="110" y1="50.2277" x2="150" y2="50.2277" stroke="black"/>
+    <line x1="110" y1="105" x2="110" y2="50.2277" stroke="black"/>
+  </svg>
+</section>
+<section>
+  <header><h3>Source Code</h3></header>
+<pre><code class="language-cpp">#include &lt;cstdio&gt;
+#include &lt;cmath&gt;
+using namespace std;
+constexpr double pi = acos(-1.0);
+double func(double ra, double rb, double d) {
+    double t1 = 2 * acos((ra * ra + d * d - rb * rb) / (2 * ra * d));
+    double t2 = 2 * acos((rb * rb + d * d - ra * ra) / (2 * rb * d));
+    return (ra * ra * (t1 - sin(t1)) + rb * rb * (t2 - sin(t2))) / 2;
+}
+double inverse(double ra, double rb, double c) {
+    double l = abs(ra - rb), r = ra + rb;
+    for(int i = 0; i &lt; 100; i++) {
+        double m = (l + r) / 2;
+        double v = func(ra, rb, m);
+        if(v &gt; c) 
+            l = m;
+        else if(v &lt; c)
+            r = m;
+        else
+            return m;
+    }
+    return (l + r) / 2;
+}
+struct Swap {
+    bool enabled;
+    double &amp;xa, &amp;ya, &amp;xb, &amp;yb;
+    ~Swap() {
+        if(enabled) {
+            swap(xa, xb);
+            swap(ya, yb);
+        }
+    }
+};
+double mysqrt(double x) {
+    return x &lt;= 0 ? 0 : sqrt(x);
+}
+bool solve(double w, double h, double ra, double rb, double d,
+        double &amp;xa, double &amp;ya, double &amp;xb, double &amp;yb) {
+    // fprintf(stderr, "%f %f %f %f %f\n", w, h, ra, rb, d);
+    Swap swapper { ra &lt; rb, xa, ya, xb, yb };
+    if(swapper.enabled)
+        swap(ra, rb);
+    if(w &lt; 2 * ra || h &lt; 2 * ra)
+        return false;
+    xa = ya = ra;
+    if(w &gt;= ra + d + rb) {
+        xb = ra + d;
+        yb = ra;
+        return true;
+    }
+    xb = w - rb;
+    yb = ya + mysqrt(d * d - (xb - xa) * (xb - xa));
+    if(yb + rb &lt;= h)
+        return true;
+    return false;
+}
+int main() {
+    int w, h, a, b, c;
+    while(true) {
+        scanf("%d %d %d %d %d", &amp;w, &amp;h, &amp;a, &amp;b, &amp;c);
+        if(!w &amp;&amp; !h &amp;&amp; !a &amp;&amp; !b &amp;&amp; !c)
+            break;
+        double ra = sqrt(a / pi);
+        double rb = sqrt(b / pi);
+        double d = inverse(ra, rb, c);
+        double xa = 0, ya = 0, xb = 0, yb = 0;
+        if(solve(w, h, ra, rb, d, xa, ya, xb, yb)) {
+            printf("%.9f %.9f %.9f %.9f %.9f %.9f\n",
+                xa, ya, ra, xb, yb, rb);
+        } else {
+            puts("impossible");
+        }
+    }
+}
+</code></pre>
+</section>
+<footer>
+  <p>
+    <a href="http://jag2013autumn.contest.atcoder.jp/tasks/icpc2013autumn_h">
+    JAG Practice Contest for ACM-ICPC Asia Regional 2013
+    H - Venn Diagram</a>,
+    NTUJ Practice 2016-08-20 H, and
+    NTUJ ACM2016 HW4 C.
+  </p>
+
+  <p>
+    Written on <time datetime="2016-08-26">August 26 2016</time>.
+  </p>
+</footer>

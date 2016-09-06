@@ -1,0 +1,173 @@
+# vim: ft=html
+Template: entry
+Title: Optimal Point
+Path: optimal-point.html
+Author: johnchen902
+Description: Find an integer point minimizing the maximum Manhattan distance to each given integer points in 3-space.
+Creation: 2016-08-30 08:00:00
+MathJax: true
+
+<header><h2>Optimal Point</h2></header>
+<section>
+  <header><h3>Problem</h3></header>
+  <p>
+    Find an integer point minimizing the maximum Manhattan
+    distance to each given integer points in 3-space.
+  </p>
+</section>
+<section>
+  <header><h3>Solution</h3></header>
+  <p>
+    As an optimization problem,
+    if its decision version can be solved,
+    we can binary search the answer.
+    We'll need some elementary math.
+  </p>
+  <p>
+    Obviously the decision version is
+    $$
+      \exists x,y,z:\forall i:\lvert x-x_i\rvert+\lvert y-y_i\rvert+\lvert z-z_i\rvert\le k
+    $$
+    Expanding the formula, we can get:
+    $$\left\{\begin{align}
+      a &amp; \le x + y + z \le b \\
+      c &amp; \le x + y - z \le d \\
+      e &amp; \le x - y + z \le f \\
+      g &amp; \le x - y - z \le h
+    \end{align}\right.$$
+    Or equivalently,
+    $$\left\{\begin{align}
+      p = \max(a - x, x - h) &amp; \le y + z \le \min(b - x, x - g) = q\\
+      r = \max(c - x, x - f) &amp; \le y - z \le \min(d - x, x - e) = s
+    \end{align}\right.$$
+    And it has an integer solution if and only if
+    $$
+      p \le q \land r \le s \land (p \lt q \lor r \lt s \lor (p + r) \text{ is even})
+    $$
+    Not willing to expand the expression above, I determined that it is
+    sufficient to test the following \(x\):
+    $$
+      \left\{\left\lfloor\frac{a + g}{2}\right\rfloor,
+      \left\lfloor\frac{a + g}{2}\right\rfloor + 1,
+      \left\lfloor\frac{c + e}{2}\right\rfloor,
+      \left\lfloor\frac{c + e}{2}\right\rfloor + 1,
+      \left\lfloor\frac{d + f}{2}\right\rfloor\right\}
+    $$
+  </p>
+  <p>
+    One tricky thing is to implement the floor function,
+    as integer division rounds toward zero on most machine,
+    and we're already on the edge of integer overflow.
+  </p>
+</section>
+<section>
+  <header><h3>Source Code</h3></header>
+<pre><code class="language-cpp">#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+using ll = long long;
+
+/**
+ * returns (a + b) / 2, rounding toward negative infinity
+ */
+ll avg(ll a, ll b) {
+    return a / 2 + b / 2 + (a % 2 + b % 2 + 2) / 2 - 1;
+}
+
+/**
+ * Solve a &lt;= x + y &lt;= b
+ *       c &lt;= x - y &lt;= d
+ */
+bool solve(ll a, ll b, ll c, ll d, ll &amp;x, ll &amp;y) {
+    if(a &gt; b || c &gt; d || (a == b &amp;&amp; c == d &amp;&amp; ((a ^ c) &amp; 1)))
+        return false;
+    x = avg(a, c + 1);
+    y = max(a - x, x - d);
+    return true;
+}
+
+/**
+ * Solve a &lt;= x + y + z &lt;= b
+ *       c &lt;= x + y - z &lt;= d
+ *       e &lt;= x - y + z &lt;= f
+ *       g &lt;= x - y - z &lt;= h
+ */
+bool solve(ll a, ll b, ll c, ll d,
+            ll e, ll f, ll g, ll h,
+            ll &amp;x, ll &amp;y, ll &amp;z) {
+    if(a &gt; b || c &gt; d || e &gt; f || g &gt; h)
+        return false;
+    const ll testx[] = {
+        avg(c, e),
+        avg(c, e) + 1,
+        avg(a, g),
+        avg(a, g) + 1,
+        avg(d, f),
+    };
+    for(ll xx : testx) {
+        x = xx;
+        if(solve(max(a - x, x - h), min(b - x, x - g),
+                    max(c - x, x - f), min(d - x, x - e), y, z))
+            return true;
+    }
+    return false;
+}
+
+constexpr ll maxx = 1000000000000000000LL;
+ll xi[100000], yi[100000], zi[100000];
+
+bool feasible(int n, ll k, ll &amp;x, ll &amp;y, ll &amp;z) {
+    ll a, b, c, d, e, f, g, h;
+    a = c = e = g = -3 * maxx;
+    b = d = f = h = +3 * maxx;
+    for(int i = 0; i &lt; n; i++) {
+        a = max(a, xi[i] + yi[i] + zi[i] - k);
+        b = min(b, xi[i] + yi[i] + zi[i] + k);
+        c = max(c, xi[i] + yi[i] - zi[i] - k);
+        d = min(d, xi[i] + yi[i] - zi[i] + k);
+        e = max(e, xi[i] - yi[i] + zi[i] - k);
+        f = min(f, xi[i] - yi[i] + zi[i] + k);
+        g = max(g, xi[i] - yi[i] - zi[i] - k);
+        h = min(h, xi[i] - yi[i] - zi[i] + k);
+    }
+    return solve(a, b, c, d, e, f, g, h, x, y, z);
+}
+
+void solve(int n) {
+    ll l = 0, r = 3 * maxx;
+    while(l &lt; r) {
+        ll m = (l + r) / 2, x, y, z;
+        if(feasible(n, m, x, y, z))
+            r = m;
+        else
+            l = m + 1;
+    }
+    ll x, y, z;
+    feasible(n, l, x, y, z);
+    printf("%lld %lld %lld\n", x, y, z);
+}
+
+int main() {
+    int t;
+    scanf("%d", &amp;t);
+    while(t--) {
+        int n;
+        scanf("%d", &amp;n);
+        for(int i = 0; i &lt; n; i++)
+            scanf("%lld %lld %lld", xi + i, yi + i, zi + i);
+        solve(n);
+    }
+}
+</code></pre>
+</section>
+<footer>
+  <p>
+    <a href="http://codeforces.com/contest/685/problem/C">
+    Codeforces Round #359 (Div. 1) C - Optimal Point</a> and
+    NTUJ ACM2016 HW4 H.
+  </p>
+
+  <p>
+    Written on <time datetime="2016-08-26">August 30 2016</time>.
+  </p>
+</footer>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>johnchen902's Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="johnchen902">
+    <meta name="description" content="This blog features competitive-programming problems, their solutions in English, and accepted source code in high-quality C++.">
+    <style>
+      p { max-width: 40em; }
+      dl { padding-left: 40px; }
+      dt { display: list-item; }
+      dd { max-width: 34em; }
+      .date { color: gray; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>johnchen902's Blog</h1>
+    </header>
+    <p>
+      This blog features competitive-programming problems,
+      their solutions in English,
+      and accepted source code in high-quality C++.
+    </p>
+    <p>
+      Links to the original problems are provided at the bottom
+      of each pages, if possible.
+    </p>
+    <section>
+      <header>
+        <h2>Entries</h2>
+      </header>
+      <dl>{{
+        var df=it.dateFormat;
+        it.raws.sort((a,b)=>new Date(b.creation)-new Date(a.creation));
+      }}{{~it.raws:value:index}}
+        <dt><a href="/{{!value.webpath}}">{{!value.title}}</a>
+        <dd>{{!value.description}}
+          <br><i class="date"><time datetime="{{!df(value.creation,"isoDate")}}">{{!df(value.creation,"mmmm dd yyyy")}}</time></i>{{~}}
+      </dl>
+    </section>
+    <section>
+      <header>
+        <h2>Similiar Sites</h2>
+      </header>
+      <dl>
+        <dt><a href="https://codingdream1373.blogspot.tw/">codingdream</a>
+        <dd>super active but almost code-only, by Yenjen Wang
+        <dt><a href="https://codingsimplifylife.blogspot.tw/"><span lang="zh-TW">code風景區</span> (code scenic)</a> 
+        <dd>active with a controversial C++ tutorial, by <span lang="zh-TW">余柏序</span>
+        <dt><a href="https://garbagecode.blogspot.tw/" lang="zh-TW">亂丟程式碼の天空</a> 
+        <dd>active, by <span lang="zh-TW">顏睿楠</span>
+        <dt><a href="https://lfswang.github.io/">LFsWang</a> 
+        <dd>active, by LFsWang
+        <dt><a href="https://cbdcoding.blogspot.tw/" lang="zh-TW" rel="nofollow">code倉庫</a> 
+        <dd>inactive, by <span lang="zh-TW">陳柏叡</span>
+        <dt><a href="https://sunmoon-template.blogspot.tw/" lang="zh-TW" rel="nofollow">日月卦長的模板庫</a>
+            <a href="https://sunmoon-coding.blogspot.tw/" lang="zh-TW" rel="nofollow">日月卦長的解題紀錄</a> 
+        <dd>neither active, by <span lang="zh-TW">黃兆源</span>
+        <dt><a href="https://codingbeans.blogspot.tw/" rel="nofollow">Coding Beans</a> 
+        <dd>inactive, by <span lang="zh-TW">洪駿輝</span>
+        <dt><a href="https://domen-blog.github.io/" rel="nofollow">Domen's Programming World</a> 
+        <dd>inactive, by domen111
+        <dt><a href="https://chino.taipei/" rel="nofollow">Chino's</a> 
+        <dd>inactive, by Chungsheng Wu
+        <dt>An-Li Ting 
+        <dd>broken, by Anli Ting.
+      </dl>
+    </section>
+    <footer>
+      <!-- placeholder -->
+    </footer>
+  </body>
+</html>

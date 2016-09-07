@@ -23,7 +23,38 @@ MathJax: true
     we can binary search the answer.
     We'll need some elementary math.
   </p>
-  <p>
+  <noscript><p>
+    Obviously the decision version is
+    <span style="display:block;text-align:center">
+      &exist;x,y,z : &forall;i : |x &minus; x<sub>i</sub>| + |y &minus; y<sub>i</sub>| + |z &minus; z<sub>i</sub>| &le; k
+    </span>
+    Expanding the formula, we can get:
+    <span style="display:block;text-align:center">
+      a &le; x + y + z &le; b<br>
+      c &le; x + y &minus; z &le; d<br>
+      e &le; x &minus; y + z &le; f<br>
+      g &le; x &minus; y &minus; z &le; h
+    </span>
+    Or equivalently,
+    <span style="display:block;text-align:center">
+      p = max(a &minus; x, x &minus; h) &le; y + z &le; min(b &minus; x, x &minus; g) = q<br>
+      r = max(c &minus; x, x &minus; f) &le; y &minus; z &le; min(d &minus; x, x &minus; e) = s
+    </span>
+    And it has an integer solution if and only if
+    <span style="display:block;text-align:center">
+      p &le; q &and; r &le; s &and; (p &lt; q &or; r &lt; s &or; (p + r) is even)
+    </span>
+    Not willing to expand the expression above, I determined that it is
+    sufficient to test the following x:
+    <span style="display:block;text-align:center">
+      &lfloor;(a + g) / 2&rfloor;,
+      &lfloor;(a + g) / 2&rfloor; + 1,
+      &lfloor;(c + e) / 2&rfloor;,
+      &lfloor;(c + e) / 2&rfloor; + 1,
+      &lfloor;(d + f) / 2&rfloor;
+    </span>
+  </p></noscript>
+  <p class="scriptonly">
     Obviously the decision version is
     $$
       \exists x,y,z:\forall i:\lvert x-x_i\rvert+\lvert y-y_i\rvert+\lvert z-z_i\rvert\le k

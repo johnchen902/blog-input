@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="johnchen902">
     <meta name="description" content="This blog features competitive-programming problems, their solutions in English, and accepted source code in high-quality C++.">
+    <link rel="canonical" href="https://johnchen902.github.io{{=it.site}}/">
     <style>
       p { max-width: 40em; }
       dl { padding-left: 40px; }
@@ -47,24 +48,24 @@
       <dl>
         <dt><a href="https://codingdream1373.blogspot.tw/">codingdream</a>
         <dd>super active but almost code-only, by Yenjen Wang
-        <dt><a href="https://codingsimplifylife.blogspot.tw/"><span lang="zh-TW">code風景區</span> (code scenic)</a> 
+        <dt><a href="https://codingsimplifylife.blogspot.tw/"><span lang="zh-TW">code風景區</span> (code scenic)</a>
         <dd>active with a controversial C++ tutorial, by <span lang="zh-TW">余柏序</span>
-        <dt><a href="https://garbagecode.blogspot.tw/" lang="zh-TW">亂丟程式碼の天空</a> 
+        <dt><a href="https://garbagecode.blogspot.tw/" lang="zh-TW">亂丟程式碼の天空</a>
         <dd>active, by <span lang="zh-TW">顏睿楠</span>
-        <dt><a href="https://lfswang.github.io/">LFsWang</a> 
+        <dt><a href="https://lfswang.github.io/">LFsWang</a>
         <dd>active, by LFsWang
-        <dt><a href="https://cbdcoding.blogspot.tw/" lang="zh-TW" rel="nofollow">code倉庫</a> 
+        <dt><a href="https://cbdcoding.blogspot.tw/" lang="zh-TW">code倉庫</a>
         <dd>inactive, by <span lang="zh-TW">陳柏叡</span>
-        <dt><a href="https://sunmoon-template.blogspot.tw/" lang="zh-TW" rel="nofollow">日月卦長的模板庫</a>
-            <a href="https://sunmoon-coding.blogspot.tw/" lang="zh-TW" rel="nofollow">日月卦長的解題紀錄</a> 
+        <dt><a href="https://sunmoon-template.blogspot.tw/" lang="zh-TW">日月卦長的模板庫</a>
+            <a href="https://sunmoon-coding.blogspot.tw/" lang="zh-TW">日月卦長的解題紀錄</a>
         <dd>neither active, by <span lang="zh-TW">黃兆源</span>
-        <dt><a href="https://codingbeans.blogspot.tw/" rel="nofollow">Coding Beans</a> 
+        <dt><a href="https://codingbeans.blogspot.tw/">Coding Beans</a>
         <dd>inactive, by <span lang="zh-TW">洪駿輝</span>
-        <dt><a href="https://domen-blog.github.io/" rel="nofollow">Domen's Programming World</a> 
+        <dt><a href="https://domen-blog.github.io/">Domen's Programming World</a>
         <dd>inactive, by domen111
-        <dt><a href="https://chino.taipei/" rel="nofollow">Chino's</a> 
+        <dt><a href="https://chino.taipei/">Chino's</a>
         <dd>inactive, by Chungsheng Wu
-        <dt>An-Li Ting 
+        <dt>An-Li Ting
         <dd>broken, by Anli Ting.
       </dl>
     </section>

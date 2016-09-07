@@ -1,0 +1,174 @@
+# vim: ft=html
+Template: entry
+Title: Crimiville
+Path: crimiville.html
+Author: johnchen902
+Description: In a bipartite graph, is there a S &sube; X s.t. |&Gamma;(S)| &gt; |S|? If not, maximize &sum;{i&in;S}w(i) &minus; &sum;{i&in;&Gamma;(S)}w(i) subject to |&Gamma;(S)| = |S|.
+Creation: 2016-09-07 12:30:00
+MathJax: true
+
+<header><h2>Crimiville</h2></header>
+<section>
+  <header><h3>Problem</h3></header>
+  <noscript><p>
+    You are given a bipartite graph G=(X&cup;Y, E).
+    Is there a S &sube; X such that |&Gamma;(S)| &gt; |S|?
+    If not, maximize &sum;<sub>i&in;S</sub>w(i) &minus;
+    &sum;<sub>i&in;&Gamma;(S)</sub>w(i) subject to
+    |&Gamma;(S)| = |S|.
+  </p></noscript>
+  <p class="scriptonly">
+    You are given a bipartite graph \(G=(X\cup Y, E)\).
+    Is there a \(S\subseteq X\) such that
+    \(\lvert\Gamma(S)\rvert\gt\lvert S\rvert\)?
+    If not, maximize \(\sum_{i\in S}w(i)-\sum_{i\in\Gamma(S)}w(i)\)
+    subject to \(\lvert\Gamma(S)\rvert=\lvert S\rvert\).
+  </p>
+</section>
+<section>
+  <header><h3>Solution</h3></header>
+  <p>
+    As a direct consequences of Hall's theorem,
+    we just have to check if there is a perfect matching
+    to answer the first question.
+  </p>
+  <p>
+    The "subject to" part of the second question is annoying.
+    We can add a sufficiently large number to each weight,
+    so any infeasible solution won't be the maximum.
+  </p>
+  <noscript><p>
+    Finally, with
+    <span style="display:block;text-align:center">
+      max(&sum;<sub>i&in;S</sub>w(i) &minus; &sum;<sub>i&in;&Gamma;(S)</sub>w(i)) = &sum;<sub>i&in;X</sub>w(i) &minus; min(&sum;<sub>i&in;&Gamma;(S)</sub>w(i) + &sum;<sub>i&in;X\S</sub>w(i))
+    </span>
+    we can get the answer after computing the min-cut
+    of a graph similar to the original one.
+  </p></noscript>
+  <p class="scriptonly">
+    Finally, with
+    $$
+    \max\left(\sum_{i\in S}w(i)-\sum_{i\in\Gamma(S)}w(i)\right)=\sum_{i\in X}w(i)-\min\left(\sum_{i\in\Gamma(S)}w(i)+\sum_{i\in X\setminus S}w(i)\right)
+    $$
+    we can get the answer after computing the min-cut
+    of a graph similar to the original one.
+  </p>
+</section>
+<section>
+  <header><h3>Source Code</h3></header>
+<pre><code class="languace-cpp">#include &lt;cstdio&gt;
+#include &lt;list&gt;
+#include &lt;numeric&gt;
+using namespace std;
+constexpr int maxn = 200 * 2 + 2;
+int c[maxn][maxn], f[maxn][maxn], e[maxn], h[maxn];
+void push(int u, int v) {
+    int x = min(c[u][v] - f[u][v], e[u]);
+    if(x) {
+        f[u][v] += x;
+        f[v][u] -= x;
+        e[u] -= x;
+        e[v] += x;
+    }
+}
+void relabel(int u, int n) {
+    h[u] = 2 * n;
+    for(int i = 0; i &lt; n; i++)
+        if(c[u][i] &gt; f[u][i])
+            h[u] = min(h[u], h[i] + 1);
+}
+void discharge(int u, int n) {
+    while(e[u]) {
+        for(int i = 0; i &lt; n &amp;&amp; e[u]; i++)
+            if(h[u] == h[i] + 1)
+                push(u, i);
+        if(e[u])
+            relabel(u, n);
+    }
+}
+int max_flow(int s, int t, int n) {
+    for(int i = 0; i &lt; n; i++)
+        fill_n(f[i], n, 0);
+    for(int i = 0; i &lt; n; i++) {
+        f[s][i] = e[i] = c[s][i];
+        f[i][s] = -f[s][i];
+    }
+    fill_n(h, n, 0);
+    h[s] = n;
+    list&lt;int&gt; q;
+    for(int i = 0; i &lt; n; i++)
+        if(i != s &amp;&amp; i != t)
+            q.push_back(i);
+    for(auto i = q.begin(); i != q.end(); ++i) {
+        int oh = h[*i];
+        discharge(*i, n);
+        int nh = h[*i];
+        if(oh != nh)
+            q.splice(q.begin(), q, i);
+    }
+    return accumulate(f[s], f[s] + n, 0);
+}
+constexpr int maxda = 10000;
+constexpr int large = 200 * maxda + 1;
+constexpr int maxc = maxda + large;
+void solve() {
+    int n;
+    scanf("%d", &amp;n);
+    int v = 2 * n + 2;
+    for(int i = 0; i &lt; v; i++)
+        fill_n(c[i], v, 0);
+    for(int i = 0; i &lt; n; i++) {
+        int k;
+        scanf("%d", &amp;k);
+        for(int j = 0; j &lt; k; j++) {
+            int x;
+            scanf("%d", &amp;x);
+            c[x][n + i] = 1;
+        }
+    }
+    for(int i = 0; i &lt; n; i++) {
+        c[v - 2][i] = 1;
+        c[n + i][v - 1] = 1;
+    }
+    if(max_flow(v - 2, v - 1, v) != n) {
+        for(int i = 0; i &lt; 2 * n; i++)
+            scanf("%*d");
+        puts("need reinforcement.");
+        return;
+    }
+    for(int i = 0; i &lt; n; i++)
+        for(int j = 0; j &lt; n; j++)
+            if(c[i][n + j])
+                c[i][n + j] = maxc;
+    for(int i = 0; i &lt; n; i++) {
+        int a;
+        scanf("%d", &amp;a);
+        c[n + i][v - 1] = a + large;
+    }
+    int sumd = 0;
+    for(int i = 0; i &lt; n; i++) {
+        int d;
+        scanf("%d", &amp;d);
+        sumd += c[v - 2][i] = d + large;
+    }
+    printf("%d\n", sumd - max_flow(v - 2, v - 1, v));
+}
+int main() {
+    int t;
+    scanf("%d", &amp;t);
+    while(t--)
+        solve();
+}
+</code></pre>
+</section>
+<footer>
+  <p>
+    Problem source:
+    <a href="http://acm.csie.org/ntujudge/problem.php?id=1681" rel="nofollow">
+    NTUJ 1681 - Crimiville</a> (requires login)
+  </p>
+
+  <p>
+    Written on <time datetime="2016-09-07">September 07 2016</time>.
+  </p>
+</footer>

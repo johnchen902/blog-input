@@ -3,7 +3,7 @@ Template: entry
 Title: Crimiville
 Path: crimiville.html
 Author: johnchen902
-Description: In a bipartite graph, is there a S &sube; X s.t. |&Gamma;(S)| &gt; |S|? If not, maximize &sum;{i&in;S}w(i) &minus; &sum;{i&in;&Gamma;(S)}w(i) subject to |&Gamma;(S)| = |S|.
+Description: In a bipartite graph, is there a S &sube; X s.t. |&Gamma;(S)| &lt; |S|? If not, maximize &sum;{i&in;S}w(i) &minus; &sum;{i&in;&Gamma;(S)}w(i) subject to |&Gamma;(S)| = |S|.
 Creation: 2016-09-07 12:30:00
 MathJax: true
 
@@ -12,7 +12,7 @@ MathJax: true
   <header><h3>Problem</h3></header>
   <noscript><p>
     You are given a bipartite graph G=(X&cup;Y, E).
-    Is there a S &sube; X such that |&Gamma;(S)| &gt; |S|?
+    Is there a S &sube; X such that |&Gamma;(S)| &lt; |S|?
     If not, maximize &sum;<sub>i&in;S</sub>w(i) &minus;
     &sum;<sub>i&in;&Gamma;(S)</sub>w(i) subject to
     |&Gamma;(S)| = |S|.
@@ -20,7 +20,7 @@ MathJax: true
   <p class="scriptonly">
     You are given a bipartite graph \(G=(X\cup Y, E)\).
     Is there a \(S\subseteq X\) such that
-    \(\lvert\Gamma(S)\rvert\gt\lvert S\rvert\)?
+    \(\lvert\Gamma(S)\rvert\lt\lvert S\rvert\)?
     If not, maximize \(\sum_{i\in S}w(i)-\sum_{i\in\Gamma(S)}w(i)\)
     subject to \(\lvert\Gamma(S)\rvert=\lvert S\rvert\).
   </p>

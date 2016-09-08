@@ -1,0 +1,346 @@
+# vim: ft=html
+Template: entry
+Title: Expression
+Path: expression.html
+Author: johnchen902
+Description: Find the shortest string that matches a given regular expression and contains a given substring.
+Creation: 2016-09-09 01:00:00
+
+<header><h2>Expression</h2></header>
+<section>
+  <header><h3>Problem</h3></header>
+  <p>
+    Find the shortest string that matches a given regular
+    expression and contains a given substring.
+    The regular expression consist only of
+    a to z, dot, alternation, concatenation, and kleene star.
+    The length of both input are no more than 10000.
+  </p>
+</section>
+<section>
+  <header><h3>Solution</h3></header>
+  <p>
+    You can solve this problem only if you can check
+    the given string matches the regular expression.
+    We can easily construct an equivalent NFA with
+    only O(n) states and total transitions,
+    but how to proceed from here?
+    We can't construct a DFA because it takes
+    exponential time.
+  </p>
+  <p>
+    We should record states reachable with
+    the first character. Then, we can infer
+    states reachable with the first two characters
+    in O(n)&hellip; After m steps, we can infer
+    states reachable with the entire string.
+    That means we can check if the NFA accepts
+    a given string in O(nm).
+  </p>
+  <p>
+    Alternatively, we can check with dynamic programming.
+    The data we memorizes is <em>whether the accept state
+    can be reached from this state with exactly this suffix</em>,
+    and the transition is straight-forward.
+    To prevent cyclic dependencies, we have to eliminate
+    &epsilon;-cycles beforehand.
+  </p>
+  <p>
+    Back to the original problem. We can find the minimum
+    characters needed from each state to the accept state
+    easily with a backward-bfs. Then we can change the latter
+    algorithm to memorizing <em>the minimum characters
+    needed to reach the accept state from this state
+    with this suffix as prefix</em>. One more backward-bfs
+    and we can determine the length of the answer.
+    Finally we can reconstruct the answer by backtracking.
+  </p>
+  <p>
+    On Codeforces the memory limit is 256MiB. I have to use
+    <code>int16_t</code> and reduce the number of states
+    of the NFA to get under the limit.
+  </p>
+</section>
+<section>
+  <header><h3>Source Code</h3></header>
+<pre><code class="languace-cpp">#include &lt;cstdio&gt;
+#include &lt;vector&gt;
+#include &lt;stack&gt;
+#include &lt;algorithm&gt;
+#include &lt;utility&gt;
+#include &lt;cassert&gt;
+#include &lt;queue&gt;
+#include &lt;cstring&gt;
+#include &lt;functional&gt;
+using namespace std;
+
+vector&lt;pair&lt;char, int&gt;&gt; adj[10001];
+int nstates;
+int new_state() {
+    return nstates++;
+}
+
+int parse_a(int s);
+int parse_b(int s);
+int parse_c(int s);
+
+int parse_a(int s) {
+    int t = parse_b(s);
+    while(true) {
+        char c = getchar();
+        if(c == '\n' || c == ')') {
+            ungetc(c, stdin);
+            break;
+        }
+        assert(c == '|');
+        int s2 = new_state();
+        adj[s].emplace_back('\0', s2);
+        int t2 = parse_b(s2);
+        adj[t2].emplace_back('\0', t);
+    }
+    return t;
+}
+
+int parse_b(int s) {
+    while(true) {
+        char c = getchar();
+        ungetc(c, stdin);
+        if(c == ')' || c == '|' || c == '\n')
+            break;
+        s = parse_c(s);
+    }
+    return s;
+}
+
+void ignore_more_stars() {
+    int c;
+    while((c = getchar()) == '*')
+        ;
+    ungetc(c, stdin);
+}
+
+int parse_c(int s) {
+    int c = getchar();
+    if(c == '.' || (c &gt;= 'a' &amp;&amp; c &lt;= 'z')) {
+        char d = getchar();
+        if(d == '*') {
+            int t = new_state();
+            adj[s].emplace_back('\0', t);
+            adj[t].emplace_back(c, t);
+            ignore_more_stars();
+            return t;
+        } else {
+            ungetc(d, stdin);
+            int t = new_state();
+            adj[s].emplace_back(c, t);
+            return t;
+        }
+    } else if(c == '*') {
+        ignore_more_stars();
+        return s;
+    } else {
+        assert(c == '(');
+        int s2 = new_state();
+        adj[s].emplace_back('\0', s2);
+        int t = parse_a(s2);
+        char rparen = getchar();
+        assert(rparen == ')');
+        char d = getchar();
+        if(d == '*') {
+            adj[t].emplace_back('\0', s2);
+            ignore_more_stars();
+            return s2;
+        } else {
+            ungetc(d, stdin);
+            return t;
+        }
+    }
+}
+
+int id[10001], low[10001], nextid = 1;
+bool onstack[10001];
+stack&lt;int&gt; tjstack;
+int mapp[10001];
+void torjan(int i) {
+    onstack[i] = true;
+    tjstack.push(i);
+    low[i] = id[i] = nextid++;
+    for(auto p : adj[i]) {
+        if(p.first)
+            continue;
+        int c = p.second;
+        if(!id[c]) {
+            torjan(c);
+            low[i] = min(low[i], low[c]);
+        } else if(onstack[c]) {
+            low[i] = min(low[i], id[c]);
+        }
+    }
+    if(low[i] == id[i]) {
+        int x;
+        do {
+            x = tjstack.top();
+            tjstack.pop();
+            onstack[x] = false;
+            mapp[x] = i;
+        } while(x != i);
+    }
+}
+void eliminate() {
+    for(int i = 0; i &lt; nstates; i++)
+        if(id[i] == 0)
+            torjan(i);
+    for(int i = 0; i &lt; nstates; i++)
+        for(auto &amp;p : adj[i])
+            p.second = mapp[p.second];
+    for(int i = 0; i &lt; nstates; i++)
+        if(i != mapp[i]) {
+            adj[mapp[i]].insert(adj[mapp[i]].end(),
+                    adj[i].begin(), adj[i].end());
+            adj[i].clear();
+        }
+    for(int i = 0; i &lt; nstates; i++)
+        adj[i].erase(remove(adj[i].begin(), adj[i].end(),
+                make_pair('\0', i)), adj[i].end());
+}
+
+vector&lt;pair&lt;bool, int&gt;&gt; rev[10001];
+template&lt;typename T&gt;
+void backward_bfs(int t, T *out) {
+    for(int i = 0; i &lt; nstates; i++)
+        for(auto p : adj[i])
+            rev[p.second].emplace_back(p.first, i);
+    fill_n(out, nstates, 32000);
+    using P = pair&lt;int, int&gt;;
+    priority_queue&lt;P, vector&lt;P&gt;, greater&lt;P&gt;&gt; pq;
+    out[t] = 0;
+    pq.push(make_pair(0, t));
+    while(!pq.empty()) {
+        P p = pq.top();
+        pq.pop();
+        if(p.first != out[p.second])
+            continue;
+        for(auto q : rev[p.second])
+            if(out[q.second] &gt; p.first + (q.first ? 1 : 0)) {
+                out[q.second] = p.first + (q.first ? 1 : 0);
+                pq.push(make_pair(out[q.second], q.second));
+            }
+    }
+}
+
+char str[10001];
+int16_t dp[10001][10001];
+
+int dfs(int st, int si, int n) {
+    if(si == n || dp[si][st])
+        return dp[si][st];
+    int ans = 32000;
+    for(auto p : adj[st])
+        if(p.first == '\0') {
+            ans = min(ans, dfs(p.second, si, n));
+        } else if(p.first == '.' || p.first == str[si]) {
+            ans = min(ans, dfs(p.second, si + 1, n) + 1);
+        }
+    return dp[si][st] = ans;
+}
+
+int ans[10001];
+void backward_bfs2() {
+    copy_n(dp[0], nstates, ans);
+    using P = pair&lt;int, int&gt;;
+    priority_queue&lt;P, vector&lt;P&gt;, greater&lt;P&gt;&gt; pq;
+    for(int i = 0; i &lt; nstates; i++)
+        if(i == mapp[i])
+            pq.push(make_pair(ans[i], i));
+    while(!pq.empty()) {
+        P p = pq.top();
+        pq.pop();
+        if(p.first != ans[p.second])
+            continue;
+        for(auto q : rev[p.second])
+            if(ans[q.second] &gt; p.first + (q.first ? 1 : 0)) {
+                ans[q.second] = p.first + (q.first ? 1 : 0);
+                pq.push(make_pair(ans[q.second], q.second));
+            }
+    }
+}
+
+void myputchar(char c) {
+    if(c == '.')
+        putchar('a');
+    else if(c &gt;= 'a' &amp;&amp; c &lt;= 'z')
+        putchar(c);
+}
+
+void answer(int x, int t, int n) {
+    while(dp[0][x] &gt; ans[x])
+        for(auto p : adj[x])
+            if(ans[p.second] + (p.first ? 1 : 0) == ans[x]) {
+                myputchar(p.first);
+                x = p.second;
+                break;
+            }
+    for(int i = 0; i &lt; n;)
+        for(auto p : adj[x])
+            if(p.first == '\0') {
+                if(dp[i][p.second] == dp[i][x]) {
+                    x = p.second;
+                    break;
+                }
+            } else if(p.first == '.' || p.first == str[i]) {
+                if(dp[i + 1][p.second] == dp[i][x] - 1) {
+                    myputchar(str[i++]);
+                    x = p.second;
+                    break;
+                }
+            }
+    while(x != t)
+        for(auto p : adj[x])
+            if(dp[n][p.second] + (p.first ? 1 : 0) == dp[n][x]) {
+                myputchar(p.first);
+                x = p.second;
+                break;
+            }
+    putchar('\n');
+}
+
+int main() {
+    // parse input
+    int s = new_state();
+    int t = parse_a(s);
+    scanf("%s", str);
+    int n = strlen(str);
+
+    // eliminate &epsilon;-cycles
+    eliminate();
+    s = mapp[s];
+    t = mapp[t];
+    // backward bfs
+    backward_bfs(t, dp[n]);
+    // dp
+    for(int i = 0; i &lt; nstates; i++)
+        if(i == mapp[i])
+            dfs(i, 0, n);
+    // backward bfs2
+    backward_bfs2();
+    // finally
+    if(ans[s] &gt;= 31000) {
+        puts("NO");
+        return 0;
+    }
+    answer(s, t, n);
+}
+</code></pre>
+</section>
+<footer>
+  <p>
+    Problem source:
+    <a href="http://codeforces.com/gym/100531" rel="nofollow">
+    2014-2015 ACM-ICPC, NEERC, Northern Subregional Contest</a>
+    E - Expression
+  </p>
+
+  <p>
+    Written on <time datetime="2016-09-09">September 09 2016</time>.
+  </p>
+</footer>

@@ -12,7 +12,7 @@ Creation: 2016-09-09 01:00:00
   <p>
     Find the shortest string that matches a given regular
     expression and contains a given substring.
-    The regular expression consist only of
+    The regular expression consists only of
     a to z, dot, alternation, concatenation, and kleene star.
     The length of both input are no more than 10000.
   </p>
@@ -20,7 +20,7 @@ Creation: 2016-09-09 01:00:00
 <section>
   <header><h3>Solution</h3></header>
   <p>
-    You can solve this problem only if you can check
+    You can solve this problem only if you can check if
     the given string matches the regular expression.
     We can easily construct an equivalent NFA with
     only O(n) states and total transitions,
@@ -29,36 +29,44 @@ Creation: 2016-09-09 01:00:00
     exponential time.
   </p>
   <p>
-    We should record states reachable with
-    the first character. Then, we can infer
-    states reachable with the first two characters
-    in O(n)&hellip; After m steps, we can infer
+    We can proceed by first recording the states reachable with
+    the first character of the given string.
+    Then, we can determine the states reachable
+    with the first two characters in O(n).
+    After m similar steps, we can determine the
     states reachable with the entire string.
     That means we can check if the NFA accepts
     a given string in O(nm).
   </p>
   <p>
-    Alternatively, we can check with dynamic programming.
-    The data we memorizes is <em>whether the accept state
-    can be reached from this state with exactly this suffix</em>,
+    Alternatively, we can proceed with dynamic programming.
+    The data we memorize is <em>whether the accept state
+    can be reached from this state with this suffix
+    of the given string</em>,
     and the transition is straight-forward.
     To prevent cyclic dependencies, we have to eliminate
     &epsilon;-cycles beforehand.
+    The time complexity is also O(nm).
+  </p>
+  <p>
+    Note: For an NFA with k transitions the complexity
+    is O((n+k)m) for both algorithm.
   </p>
   <p>
     Back to the original problem. We can find the minimum
     characters needed from each state to the accept state
-    easily with a backward-bfs. Then we can change the latter
+    easily with a backward bfs. Then we can change the latter
     algorithm to memorizing <em>the minimum characters
     needed to reach the accept state from this state
-    with this suffix as prefix</em>. One more backward-bfs
+    with this suffix of the given string as prefix</em>.
+    One more backward bfs
     and we can determine the length of the answer.
     Finally we can reconstruct the answer by backtracking.
   </p>
   <p>
     On Codeforces the memory limit is 256MiB. I have to use
-    <code>int16_t</code> and reduce the number of states
-    of the NFA to get under the limit.
+    <code>int16_t</code> and can only afford n+1 states
+    in the NFA.
   </p>
 </section>
 <section>
@@ -321,7 +329,7 @@ int main() {
     for(int i = 0; i &lt; nstates; i++)
         if(i == mapp[i])
             dfs(i, 0, n);
-    // backward bfs2
+    // backward bfs 2
     backward_bfs2();
     // finally
     if(ans[s] &gt;= 31000) {

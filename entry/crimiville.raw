@@ -4,7 +4,7 @@ Title: Crimiville
 Path: crimiville.html
 Author: johnchen902
 Description: In a bipartite graph, is there a S &sube; X s.t. |&Gamma;(S)| &lt; |S|? If not, maximize &sum;{i&in;S}w(i) &minus; &sum;{i&in;&Gamma;(S)}w(i) subject to |&Gamma;(S)| = |S|.
-Creation: 2016-09-07 12:30:00
+Creation: 2016-09-07T13:00:00+0800
 MathJax: true
 
 <header><h2>Crimiville</h2></header>
@@ -169,6 +169,6 @@ int main() {
   </p>
 
   <p>
-    Written on <time datetime="2016-09-07">September 07 2016</time>.
+    Written on <time datetime="2016-09-07T13:00:00+0800">September 07 2016</time>.
   </p>
 </footer>

@@ -4,7 +4,7 @@ Title: Expression
 Path: expression.html
 Author: johnchen902
 Description: Find the shortest string that matches a given regular expression and contains a given substring.
-Creation: 2016-09-09 01:00:00
+Creation: 2016-09-09T01:00:00+0800
 
 <header><h2>Expression</h2></header>
 <section>
@@ -349,6 +349,6 @@ int main() {
   </p>
 
   <p>
-    Written on <time datetime="2016-09-09">September 09 2016</time>.
+    Written on <time datetime="2016-09-09T01:00:00+0800">September 09 2016</time>.
   </p>
 </footer>

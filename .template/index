@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="johnchen902">
     <meta name="description" content="This blog features competitive-programming problems, their solutions in English, and accepted source code in high-quality C++.">
-    <link rel="canonical" href="https://johnchen902.github.io{{=it.site}}/">
+    <link rel="canonical" href="{{=it.canonical}}{{=it.site}}/">
     <style>
       p { max-width: 40em; }
       dl { padding-left: 40px; }
@@ -33,10 +33,11 @@
         <h2>Entries</h2>
       </header>
       <dl>{{
-        var df=it.dateFormat;
-        it.raws.sort((a,b)=>new Date(b.creation)-new Date(a.creation));
-      }}{{~it.raws:value:index}}
-        <dt><a href="{{=it.site}}/{{!value.webpath}}">{{!value.title}}</a>
+        var df = it.dateFormat;
+        var raws = it.allRaws.filter(x => x.webPath.startsWith("entry/"));
+        raws.sort((a, b) => new Date(b.creation) - new Date(a.creation));
+      }}{{~raws:value:index}}
+        <dt><a href="{{=it.site}}/{{!value.webPath}}">{{!value.title}}</a>
         <dd>{{!value.description}}
           <br><i class="date"><time datetime="{{!df(value.creation,"isoDate")}}">{{!df(value.creation,"mmmm dd yyyy")}}</time></i>{{~}}
       </dl>

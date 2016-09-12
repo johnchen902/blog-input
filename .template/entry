@@ -8,14 +8,8 @@
 {{?it.description}}    <meta name="description" content="{{!it.description}}">{{?}}
     <link rel="canonical" href="{{=it.canonical}}{{=it.site}}/{{!it.webPath}}">
     <style>p{max-width:40em;}</style>
-    <script>
-      window.onload = function () {
-        var ss = document.createElement("link");
-        ss.rel = "stylesheet";
-        ss.href = "{{=it.site}}/prism.css";
-        document.getElementsByTagName("head")[0].appendChild(ss);
-      };
-    </script>
+    <link rel="preload" href="{{=it.site}}/prism.css" as="style" onload="this.rel='stylesheet'">
+    <script defer src="{{=it.site}}/loadcss.js"></script>
     <noscript>
       <link rel="stylesheet" href="{{=it.site}}/prism.css">
       <style> .scriptonly { display: none } </style>

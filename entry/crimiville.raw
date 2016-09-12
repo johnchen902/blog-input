@@ -56,7 +56,7 @@ MathJax: true
 </section>
 <section>
   <header><h3>Source Code</h3></header>
-<pre><code class="languace-cpp">#include &lt;cstdio&gt;
+<pre><code class="language-cpp">#include &lt;cstdio&gt;
 #include &lt;list&gt;
 #include &lt;numeric&gt;
 using namespace std;

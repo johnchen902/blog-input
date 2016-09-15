@@ -1,0 +1,133 @@
+# vim: ft=html
+Template: entry
+Title: Ear Decomposition
+Path: ear-decomposition.html
+Author: johnchen902
+Description: Find an ear decomposition of an undirected graph.
+Creation: 2016-09-16T02:30:00+0800
+
+<header><h2>Expression</h2></header>
+<section>
+  <header><h3>Problem</h3></header>
+  <p>
+    Find an
+    <a href="https://en.wikipedia.org/wiki/Ear_decomposition" target="_blank">
+    ear decomposition</a> of an undirected graph.
+    In this problem both endpoints of each ear must belong
+    to earlier ears.
+  </p>
+</section>
+<section>
+  <header><h3>Solution</h3></header>
+  <p>
+    My first idea is: get a circle,
+    add some ears to use up all vertices, and
+    add the remaining edges.
+    Unfortunately it took O(nm) time.
+  </p>
+  <p>
+    I gave a shot at building a DFS tree,
+    and it turns out each back edge corresponds to an ear.
+    However, I have trouble determining the actual ear directly.
+  </p>
+  <p>
+    Then I realized I can do that later.
+    Sort all back edges by increasing height of the lower vertex
+    (lower means closer to root).
+    Then, for each back edge,
+    create an ear starting from the lower vertex,
+    following the back edge down,
+    and following the tree edges up
+    to somewhere left as an exercise to the reader
+    (up means closer to root, wait&hellip;)
+  </p>
+</section>
+<section>
+  <header><h3>Source Code</h3></header>
+<pre><code class="language-cpp">#include &lt;cstdio&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+using P = pair&lt;int, int&gt;;
+vector&lt;int&gt; adj[20000];
+int p[20000], h[20000];
+bool vis[20000];
+vector&lt;P&gt; bedges; // back edges
+void dfs(int x) {
+    vis[x] = true;
+    for(int c : adj[x])
+        if(c != p[x]) {
+            if(vis[c]) {
+                if(h[c] &lt; h[x])
+                    bedges.emplace_back(c, x);
+            } else {
+                p[c] = x;
+                h[c] = h[x] + 1;
+                dfs(c);
+            }
+        }
+}
+bool vis2[20000];
+int main() {
+#ifdef ONLINE_JUDGE
+    freopen("ear.in", "r", stdin);
+    freopen("ear.out", "w", stdout);
+#endif
+    int n, m;
+    scanf("%d %d", &amp;n, &amp;m);
+    for(int i = 0; i &lt; m; i++) {
+        int u, v;
+        scanf("%d %d", &amp;u, &amp;v);
+        u--, v--;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    p[0] = -1;
+    h[0] = 0;
+    dfs(0);
+    sort(bedges.begin(), bedges.end(),
+            [](P l, P r) { return h[l.first] &lt; h[r.first]; });
+    vis2[0] = true;
+    vector&lt;vector&lt;int&gt;&gt; ans;
+    for(P e : bedges) {
+        ans.emplace_back();
+        ans.back().push_back(e.first);
+        ans.back().push_back(e.second);
+        if(!vis2[e.first]) {
+            puts("-1");
+            return 0;
+        }
+        while(!vis2[e.second]) {
+            vis2[e.second] = true;
+            e.second = p[e.second];
+            ans.back().push_back(e.second);
+        }
+    }
+    if(find(vis2, vis2 + n, false) != vis2 + n) {
+        puts("-1");
+        return 0;
+    }
+    reverse(ans.begin(), ans.end());
+    printf("%d\n", (int) ans.size());
+    for(const vector&lt;int&gt; &amp;ansi: ans) {
+        printf("%d", (int) ansi.size() - 1);
+        for(int j : ansi)
+            printf(" %d", j + 1);
+        printf("\n");
+    }
+}
+</code></pre>
+</section>
+<footer>
+  <p>
+    Problem source:
+    <a href="http://codeforces.com/gym/100340" rel="nofollow">
+    2006-2007 Winter Petrozavodsk Camp, Andrew Stankevich Contest 24 (ASC 24)</a>
+    B - Ear Decomposition
+  </p>
+
+  <p>
+    Written on <time datetime="2016-09-16T02:30:00+0800">September 16 2016</time>.
+  </p>
+</footer>
+

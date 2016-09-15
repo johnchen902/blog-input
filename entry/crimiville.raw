@@ -28,7 +28,9 @@ MathJax: true
 <section>
   <header><h3>Solution</h3></header>
   <p>
-    As a direct consequences of Hall's theorem,
+    As a direct consequences of
+    <a href="https://en.wikipedia.org/wiki/Hall%27s_marriage_theorem" target="_blank">
+    Hall's theorem</a>,
     we just have to check if there is a perfect matching
     to answer the first question.
   </p>

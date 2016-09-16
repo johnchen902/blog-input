@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{{
+    var raws = it.allRaws.filter(x => x.webPath.startsWith("entry/"));
+  }}{{~raws:value:index}}
+  <url>
+    <loc>{{=it.canonical}}{{=it.site}}/{{=value.webPath}}</loc>
+  </url>{{~}}
+</urlset>
+

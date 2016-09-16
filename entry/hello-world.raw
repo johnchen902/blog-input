@@ -3,7 +3,7 @@ Template: entry
 Title: Hello, world!
 Path: hello-world.html
 Author: johnchen902
-Description: Print 'Hello, world!'
+Description: Print 'Hello, world!'. This is a dummy article for testing purposes.
 Creation: 2016-08-25 20:00:00
 
 <header><h2>Hello, world!</h2></header>
@@ -16,12 +16,15 @@ Creation: 2016-08-25 20:00:00
 <section>
   <h3>Solution</h3>
   <p>
-    Just do it.
+    With a hosted implementation,
+    you should be able to use the cstdio library
+    and get the job done.
   </p>
   <p>
-    Because there is no formatted output,
-    <code class="language-cpp">std::puts()</code> will be used instead of
-    <code class="language-cpp">std::printf()</code>.
+    <code class="language-cpp">std::puts()</code>
+    is preferred over
+    <code class="language-cpp">std::printf()</code>
+    because there is no formatted output.
   </p>
 </section>
 <section>
@@ -34,11 +37,12 @@ int main() {
 </section>
 <footer>
   <p>
-    A dummy article with a classical example that
-    can be found everywhere.
+    A dummy article with a classical example.
+    This article is for testing purposes.
   </p>
   <p>
-    First written on <time datetime="2016-08-25">August 25 2016</time>.
-    Rewritten on <time datetime="2016-08-30">August 30 2016</time>.
+    Written on <time datetime="2016-08-25">August 25 2016</time>.
+    Rewritten on <time datetime="2016-08-30">August 30 2016</time>
+    and <time datetime="2016-09-16T10:30:00+0800">September 16 2016</time>.
   </p>
 </footer>

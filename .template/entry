@@ -12,9 +12,30 @@
     <script defer src="{{=it.site}}/loadcss.js"></script>
     <noscript>
       <link rel="stylesheet" href="{{=it.site}}/prism.css">
-      <style> .scriptonly { display: none } </style>
     </noscript>
-{{?it.mathjax}}    <script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>{{?}}
+{{?it.mathjax}}
+    <style>
+      .htmlmath {
+        display: block;
+        text-align: center;
+        margin: 1em 0;
+      }
+      .htmlimath, .htmlmath {
+        font-family: "Latin Modern Math", serif;
+      }
+    </style>
+    <style id="withmathjaxstyle">
+      .withmathjax { display: none; }
+    </style>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Register.StartupHook("End Typeset", function() {
+        var sheet = withmathjaxstyle.sheet;
+        sheet.deleteRule(0);
+        sheet.insertRule(".nomathjax { display : none; }", 0);
+      });
+    </script>
+    <script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
+{{?}}
   </head>
   <body>
     <header>

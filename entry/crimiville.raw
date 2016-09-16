@@ -10,19 +10,22 @@ MathJax: true
 <header><h2>Crimiville</h2></header>
 <section>
   <header><h3>Problem</h3></header>
-  <noscript><p>
-    You are given a bipartite graph G=(X&cup;Y, E).
-    Is there a S &sube; X such that |&Gamma;(S)| &lt; |S|?
-    If not, maximize &sum;<sub>i&in;S</sub>w(i) &minus;
-    &sum;<sub>i&in;&Gamma;(S)</sub>w(i) subject to
-    |&Gamma;(S)| = |S|.
-  </p></noscript>
-  <p class="scriptonly">
-    You are given a bipartite graph \(G=(X\cup Y, E)\).
-    Is there a \(S\subseteq X\) such that
-    \(\lvert\Gamma(S)\rvert\lt\lvert S\rvert\)?
-    If not, maximize \(\sum_{i\in S}w(i)-\sum_{i\in\Gamma(S)}w(i)\)
-    subject to \(\lvert\Gamma(S)\rvert=\lvert S\rvert\).
+  <p>
+    You are given a bipartite graph
+    <span class="htmlimath nomathjax">G=(X&cup;Y, E)</span><!--
+    --><span class="withmathjax">\(G=(X\cup Y, E)\)</span>.
+    Is there a
+    <span class="htmlimath nomathjax">S &sube; X</span>
+    <span class="withmathjax">\(S\subseteq X\)</span>
+    such that
+    <span class="htmlimath nomathjax">|&Gamma;(S)| &lt; |S|</span><!--
+    --><span class="withmathjax">\(\lvert\Gamma(S)\rvert\lt\lvert S\rvert\)</span>?
+    If not, maximize
+    <span class="htmlimath nomathjax">&sum;<sub>i&in;S</sub>w(i) &minus; &sum;<sub>i&in;&Gamma;(S)</sub>w(i)</span>
+    <span class="withmathjax">\(\sum_{i\in S}w(i)-\sum_{i\in\Gamma(S)}w(i)\)</span>
+    subject to
+    <span class="htmlimath nomathjax">|&Gamma;(S)| = |S|</span><!--
+    --><span class="withmathjax">\(\lvert\Gamma(S)\rvert=\lvert S\rvert\)</span>.
   </p>
 </section>
 <section>
@@ -39,19 +42,14 @@ MathJax: true
     We can add a sufficiently large number to each weight,
     so any infeasible solution won't be the maximum.
   </p>
-  <noscript><p>
+  <p>
     Finally, with
-    <span style="display:block;text-align:center">
+    <span class="htmlmath nomathjax">
       max(&sum;<sub>i&in;S</sub>w(i) &minus; &sum;<sub>i&in;&Gamma;(S)</sub>w(i)) = &sum;<sub>i&in;X</sub>w(i) &minus; min(&sum;<sub>i&in;&Gamma;(S)</sub>w(i) + &sum;<sub>i&in;X\S</sub>w(i))
     </span>
-    we can get the answer after computing the min-cut
-    of a graph similar to the original one.
-  </p></noscript>
-  <p class="scriptonly">
-    Finally, with
-    $$
-    \max\left(\sum_{i\in S}w(i)-\sum_{i\in\Gamma(S)}w(i)\right)=\sum_{i\in X}w(i)-\min\left(\sum_{i\in\Gamma(S)}w(i)+\sum_{i\in X\setminus S}w(i)\right)
-    $$
+    <span class="withmathjax">
+      $$\max\left(\sum_{i\in S}w(i)-\sum_{i\in\Gamma(S)}w(i)\right)=\sum_{i\in X}w(i)-\min\left(\sum_{i\in\Gamma(S)}w(i)+\sum_{i\in X\setminus S}w(i)\right)$$
+    </span>
     we can get the answer after computing the min-cut
     of a graph similar to the original one.
   </p>

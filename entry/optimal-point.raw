@@ -23,67 +23,69 @@ MathJax: true
     we can binary search the answer.
     We'll need some elementary math.
   </p>
-  <noscript><p>
+  <p>
     Obviously the decision version is
-    <span style="display:block;text-align:center">
+    <span class="htmlmath nomathjax">
       &exist;x,y,z : &forall;i : |x &minus; x<sub>i</sub>| + |y &minus; y<sub>i</sub>| + |z &minus; z<sub>i</sub>| &le; k
     </span>
+    <span class="withmathjax">
+      $$\exists x,y,z:\forall i:\lvert x-x_i\rvert+\lvert y-y_i\rvert+\lvert z-z_i\rvert\le k$$
+    </span>
+
     Expanding the formula, we can get:
-    <span style="display:block;text-align:center">
+    <span class="htmlmath nomathjax">
       a &le; x + y + z &le; b<br>
       c &le; x + y &minus; z &le; d<br>
       e &le; x &minus; y + z &le; f<br>
       g &le; x &minus; y &minus; z &le; h
     </span>
-    Or equivalently,
-    <span style="display:block;text-align:center">
-      p = max(a &minus; x, x &minus; h) &le; y + z &le; min(b &minus; x, x &minus; g) = q<br>
-      r = max(c &minus; x, x &minus; f) &le; y &minus; z &le; min(d &minus; x, x &minus; e) = s
-    </span>
-    And it has an integer solution if and only if
-    <span style="display:block;text-align:center">
-      p &le; q &and; r &le; s &and; (p &lt; q &or; r &lt; s &or; (p + r) is even)
-    </span>
-    Not willing to expand the expression above, I determined that it is
-    sufficient to test the following x:
-    <span style="display:block;text-align:center">
-      &lfloor;(a + g) / 2&rfloor;,
-      &lfloor;(a + g) / 2&rfloor; + 1,
-      &lfloor;(c + e) / 2&rfloor;,
-      &lfloor;(c + e) / 2&rfloor; + 1,
-      &lfloor;(d + f) / 2&rfloor;
-    </span>
-  </p></noscript>
-  <p class="scriptonly">
-    Obviously the decision version is
-    $$
-      \exists x,y,z:\forall i:\lvert x-x_i\rvert+\lvert y-y_i\rvert+\lvert z-z_i\rvert\le k
-    $$
-    Expanding the formula, we can get:
+    <span class="withmathjax">
     $$\left\{\begin{align}
       a &amp; \le x + y + z \le b \\
       c &amp; \le x + y - z \le d \\
       e &amp; \le x - y + z \le f \\
       g &amp; \le x - y - z \le h
     \end{align}\right.$$
+    </span>
+
     Or equivalently,
+    <span class="htmlmath nomathjax">
+      p = max(a &minus; x, x &minus; h) &le; y + z &le; min(b &minus; x, x &minus; g) = q<br>
+      r = max(c &minus; x, x &minus; f) &le; y &minus; z &le; min(d &minus; x, x &minus; e) = s
+    </span>
+    <span class="withmathjax">
     $$\left\{\begin{align}
       p = \max(a - x, x - h) &amp; \le y + z \le \min(b - x, x - g) = q\\
       r = \max(c - x, x - f) &amp; \le y - z \le \min(d - x, x - e) = s
     \end{align}\right.$$
+    </span>
+
     And it has an integer solution if and only if
-    $$
-      p \le q \land r \le s \land (p \lt q \lor r \lt s \lor (p + r) \text{ is even})
-    $$
+    <span class="htmlmath nomathjax">
+      p &le; q &and; r &le; s &and; (p &lt; q &or; r &lt; s &or; (p + r) is even)
+    </span>
+    <span class="withmathjax">
+      $$p \le q \land r \le s \land (p \lt q \lor r \lt s \lor (p + r) \text{ is even})$$
+    </span>
+
     Not willing to expand the expression above, I determined that it is
-    sufficient to test the following \(x\):
-    $$
-      \left\{\left\lfloor\frac{a + g}{2}\right\rfloor,
+    sufficient to test the following x:
+    <span class="htmlmath nomathjax">
+      &lfloor;(a + g) / 2&rfloor;,
+      &lfloor;(a + g) / 2&rfloor; + 1,
+      &lfloor;(c + e) / 2&rfloor;,
+      &lfloor;(c + e) / 2&rfloor; + 1,
+      &lfloor;(d + f) / 2&rfloor;
+    </span>
+    <span class="withmathjax">
+    $$\left\{
+      \left\lfloor\frac{a + g}{2}\right\rfloor,
       \left\lfloor\frac{a + g}{2}\right\rfloor + 1,
       \left\lfloor\frac{c + e}{2}\right\rfloor,
       \left\lfloor\frac{c + e}{2}\right\rfloor + 1,
-      \left\lfloor\frac{d + f}{2}\right\rfloor\right\}
-    $$
+      \left\lfloor\frac{d + f}{2}\right\rfloor
+    \right\}$$
+    </span>
   </p>
   <p>
     One tricky thing is to implement the floor function,
